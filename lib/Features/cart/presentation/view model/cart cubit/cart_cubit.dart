@@ -2,14 +2,17 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_api_app/Features/cart/data/models/add_or_remove_cart_model/add_or_remove_cart_model.dart';
-import 'package:shop_api_app/Features/cart/data/models/cart_model/cart_model.dart';
-import 'package:shop_api_app/core/api/urls.dart';
 import '../../../../../core/api/api_service.dart';
+import '../../../../../core/api/urls.dart';
 import '../../../../../core/functions/toast_message.dart';
 import '../../../../../core/utils/cache_helper.dart';
 import '../../../../../core/utils/consts.dart';
 import '../../../../search/data/models/search_model/search_model.dart';
+import '../../../data/models/Paypal_payment_method_model/paypal_item_list_model/item.dart';
+import '../../../data/models/Paypal_payment_method_model/paypal_item_list_model/paypal_item_list_model.dart';
+import '../../../data/models/add_or_remove_cart_model/add_or_remove_cart_model.dart';
+import '../../../data/models/cart_cost_model/cart_cost_model.dart';
+import '../../../data/models/cart_model/cart_model.dart';
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartStates> {
@@ -17,10 +20,14 @@ class CartCubit extends Cubit<CartStates> {
 
   static CartCubit get(context) => BlocProvider.of(context);
 
-  String deliveryCost = 'Free';
-  dynamic totalCost;
+  CartCostModel cartCostModel = CartCostModel(
+    deliveryCost: 0,
+    discountCost: 0,
+    subTotalCost: 0,
+  );
 
   CartModel? cartModel;
+  PaypalItemListModel? paypalItemListModel;
   Future<void> getCartItem() async {
     try {
       emit(GetCartLoadingState());
@@ -33,15 +40,21 @@ class CartCubit extends Cubit<CartStates> {
       );
       log('Cart value status ==> ${value['status']}');
       cartModel = CartModel.fromJson(value);
-      totalCost = cartModel?.data?.total ?? 0.0;
-      if (cartModel?.data?.total < 500) {
-        deliveryCost = '150';
-        totalCost += 150;
-      } else {
-        deliveryCost = 'Free';
-      }
+      paypalItemListModel = PaypalItemListModel(
+        items: cartModel?.data?.cartItems
+            ?.map((e) => PaypalItemModel(
+                  name: e.product?.name,
+                  quantity: e.quantity,
+                  price: e.product?.price.toString(),
+                  currency: 'USD',
+                ))
+            .toList(),
+      );
+      cartCostModel = CartCostModel(
+        discountCost: 0,
+        subTotalCost: cartModel?.data?.total,
+      );
       await searchProduct();
-
       cartModel?.data?.cartItems?.forEach((elemet) {
         cart.addAll({
           elemet.product?.id ?? 52: elemet.product?.inCart ?? true,
@@ -82,7 +95,7 @@ class CartCubit extends Cubit<CartStates> {
       } else {
         await getCartItem();
       }
-      print('cartModel status ==> ${addOrRemoveCartModel?.status}');
+      log('cartModel status ==> ${addOrRemoveCartModel?.status}');
       emit(AddOrRemoveCartItemSuccessState());
     } catch (e) {
       cart[productId] = !cart[productId]!;
@@ -113,7 +126,7 @@ class CartCubit extends Cubit<CartStates> {
         });
       });
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 
@@ -131,41 +144,36 @@ class CartCubit extends Cubit<CartStates> {
         },
         token: token,
       );
-      print(value.data['message']);
+      log(value.data['message']);
       emit(UpdateCartItemSuccessState());
-      //! getCartItem();
       try {
         final token = await CacheHelper.getData(key: 'token');
-        print('token ==> $token');
         var value = await ApiService.getData(
           url: Urls.cart,
           query: null,
           token: token,
           lang: 'en',
         );
-        print('Cart value status ==> ${value['status']}');
+        log('Cart value status ==> ${value['status']}');
         cartModel = CartModel.fromJson(value);
-        totalCost = cartModel?.data?.total ?? 0.0;
-        if (cartModel?.data?.total < 500) {
-          deliveryCost = '150';
-          totalCost += 150;
-        } else {
-          deliveryCost = 'Free';
-        }
-        print('cartModel status ==> ${cartModel?.status}');
+        cartCostModel = CartCostModel(
+          discountCost: 0,
+          subTotalCost: cartModel?.data?.total,
+        );
+        log('cartModel status ==> ${cartModel?.status}');
         emit(GetCartSuccessState());
       } catch (e) {
         if (e is DioException) {
           emit(GetCartErrorState());
         }
-        print(e.toString());
+        log(e.toString());
         emit(GetCartErrorState());
       }
     } catch (e) {
       if (e is DioException) {
         emit(UpdateCartItemErrorState());
       }
-      print(e.toString());
+      log(e.toString());
       emit(UpdateCartItemErrorState());
     }
   }

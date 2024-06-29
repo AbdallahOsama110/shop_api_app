@@ -46,6 +46,7 @@ dependencies:
   flutter_slidable: ^3.1.0
   flutter_stripe: ^10.1.1
   animated_custom_dropdown: ^3.1.1
+  flutter_paypal_payment: ^1.0.6
   #http: ^0.13.0
   #email_auth: ^0.0.1
 

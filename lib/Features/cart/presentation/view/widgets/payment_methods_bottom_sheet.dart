@@ -3,13 +3,11 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shop_api_app/Features/cart/presentation/view%20model/cart%20cubit/cart_cubit.dart';
-import 'package:shop_api_app/Features/cart/presentation/view%20model/payment%20cubit/payment_cubit.dart';
-import 'package:shop_api_app/core/widgets/custom_button.dart';
-import 'package:shop_api_app/core/widgets/custom_loading_indicator.dart';
 import '../../../../../core/utils/cache_helper.dart';
-import '../../../data/models/create_order_input_model/create_order_input_model.dart';
-import '../../../data/models/payment_intent_input_model/payment_intent_input_model.dart';
+import '../../../../../core/widgets/custom_button.dart';
+import '../../../../../core/widgets/custom_loading_indicator.dart';
+import '../../view model/cart cubit/cart_cubit.dart';
+import '../../view model/payment cubit/payment_cubit.dart';
 import 'select_address_dropdown.dart';
 import 'select_payment_listview.dart';
 
@@ -59,19 +57,8 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
                     onPressed: () {
                       log('test customer id = ${CacheHelper.getData(key: 'customerID')}');
                       paymentCubit.startPayment(
-                        createOrderInputModel: CreateOrderInputModel(
-                          addressID:
-                              paymentCubit.selectedAddress?.id.toString() ??
-                                  '1',
-                          paymentMethod:
-                              paymentCubit.paymentMethodModel.paymentMethod,
-                        ),
-                        paymentIntentInputModel: PaymentIntentInputModel(
-                          customerID: CacheHelper.getData(key: 'customerID'),
-                          amount:
-                              '${(CartCubit.get(context).totalCost * 100).toInt()}',
-                          currency: 'USD',
-                        ),
+                        context,
+                        cartCubit: CartCubit.get(context),
                       );
                     },
                   ),

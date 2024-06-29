@@ -54,7 +54,7 @@ class ThanksCard extends StatelessWidget {
             SizedBox(height: size.width * .02),
             SizedBox(height: size.width * .145),
             TotalPrice(
-                title: 'Total', value: '\$${CartCubit.get(context).totalCost}'),
+                title: 'Total', value: '\$${CartCubit.get(context).cartCostModel.totalCost}'),
             SizedBox(height: size.width * .04),
             CustomButton(
               text: 'Back',

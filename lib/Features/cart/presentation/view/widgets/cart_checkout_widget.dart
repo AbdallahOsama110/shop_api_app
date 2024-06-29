@@ -43,7 +43,7 @@ class CartChechOutAndCostWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               PriceWidget(
-                price: cartCubit.totalCost,
+                price: cartCubit.cartCostModel.totalCost,
                 color: Colors.green,
               ),
             ],

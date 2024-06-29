@@ -21,7 +21,11 @@ class CostWidget extends StatelessWidget {
               'Delivery',
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            PriceWidget(price: cartCubit.deliveryCost),
+            PriceWidget(
+              price: cartCubit.cartCostModel.deliveryCost == 0
+                  ? 'Free'
+                  : cartCubit.cartCostModel.deliveryCost,
+            ),
           ],
         ),
         const SizedBox(height: 5),
@@ -32,7 +36,7 @@ class CostWidget extends StatelessWidget {
               'Subtotal',
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            PriceWidget(price: cartCubit.cartModel?.data?.total),
+            PriceWidget(price: cartCubit.cartCostModel.subTotalCost),
           ],
         ),
       ],
