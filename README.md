@@ -99,7 +99,7 @@ Shopee is a modern Flutter-based e-commerce mobile application that leverages a 
 ## 🚀 Getting Started
 
 ### Requirements
-- Flutter SDK: **>=3.22.0**
+- Flutter SDK: **>=3.22.2**
 - Dart SDK: **>=3.4.3**
 - Android/iOS emulator or physical device
 
