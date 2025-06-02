@@ -16,7 +16,8 @@ Shopee is a modern Flutter-based e-commerce mobile application that leverages a 
 - 💳 Multiple payment options:
   - Stripe (Credit/Debit Card)  
   - PayPal
-  - Cash on Delivery  
+  - Cash on Delivery
+- 💬 **Customer support** chat via Crisp integration
 - 🌓 **Settings** with light/dark theme toggle  
 - 📍 **Location** management: Add, update, delete addresses  
 - 📦 **Order history** screen with full order tracking  
