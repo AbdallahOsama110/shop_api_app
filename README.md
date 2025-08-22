@@ -25,7 +25,15 @@ Shopee is a modern Flutter-based e-commerce mobile application that leverages a 
 - 🔍 **Search** products by keyword  
 
 ---
+## 🎬 Project Demo
 
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=suRH8v5ufvE" target="_blank">
+    <img src="https://drive.google.com/uc?export=view&id=1sLrhoh5g9-bnuyfQzA-UMI1hVyXa30Yw" alt="InterVysor Demo Video" width="100%">
+  </a>
+</div>
+
+---
 ## 📱 Screenshots
 
 <div align="center">
